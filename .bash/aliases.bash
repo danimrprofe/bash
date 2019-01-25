@@ -1,13 +1,10 @@
-# Alias para DIRECTORIOS
-alias .4='cd ../../../../'
-alias .5='cd ../../../../..'
+#Info de SO, host e IP
+alias so='lsb_release -a; hostname -I; hostname'
+
+# Lista de alias
 alias ag='cat .bash_aliases .bashrc .bash_functions | grep alias | grep'
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+# Borrar
 alias c='clear'
-alias ..='cd ..'
-alias ...='cd ../../../'
-alias ....='cd ../../../../'
-alias .....='cd ../../../../'
 alias cd.='cd ..'
 alias cd..='cd ..'
 alias CD='cd'
