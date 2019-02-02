@@ -4,9 +4,9 @@ if [ -z $1 ]
 then
 	echo "Uso del comando:"
 	echo "---------------"
-	echo "crearUsuarioMasivo.sh <nombreRaiz> <contraseña> <numerousuarios>"
+	echo "user-massive-delete.sh <nombreRaiz> <contraseña> <numerousuarios>"
 	echo "Ejemplo:"
-	echo "sh crearUsuarioMasivo.sh alumno fpbasica 10"
+	echo "sh user-massive-delete.sh alumno fpbasica 10"
 else
 	RAIZ=$1
 	PRIMER_USER=$2
