@@ -1,6 +1,13 @@
 #!/bin/bash
 OP=0
-clear
+
+# Run as root, of course.
+if [ "$UID" -ne "$ROOT_UID" ]
+then
+	echo "Must be root to run this script."
+	exit 
+fi
+
 echo Menu
 echo "[1] Show users with /home"
 echo "[2] Baja usuario"
