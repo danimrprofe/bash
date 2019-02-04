@@ -29,9 +29,15 @@ case $OP in
         ;;
     2)  printf "Indica el nombre del usuario a borrar"
         read -p "Nombre del usuario a borrar: `echo $'\n> '`" nombre
-        userdel $nombre
-        echo Usuario borrado
-        ;;
+        userdel $nombre > /dev/null
+	if [ $? -eq 6 ]
+	then
+		echo El usuario no está registrado en el sistema
+	else
+        	echo Usuario borrado
+        fi
+	read parar
+	;;
     3)  echo "Creación de usuario:"
         read -p "Nombre del usuario a crear: `echo $'\n> '`" nombre
         read -p "Rol del usuario (A o P): `echo $'\n> '`" rol
