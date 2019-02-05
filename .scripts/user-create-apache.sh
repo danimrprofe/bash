@@ -1,10 +1,12 @@
 #!/bin/bash
 
+#Es necesario permitir acceso al bloque directory / en el archivo apache2.conf para qué funcione
+
 username="$1"
+
+# Creamos un site para el usuario
+
 site_user="/etc/apache2/sites-enabled/$username.lan.conf"
-
-# Crear site
-
 printf "Creando site: $site_user\n"
 
     echo "<VirtualHost *:80>" > "$site_user"
@@ -25,7 +27,7 @@ printf "Creando site: $site_user\n"
     echo -e "\tAllow from all" >> "$site_user"
 echo "</Directory>" >> "$site_user"
 
-# Crear carpetas servidor web
+# Crear estructura de carpetas para el contenido web
 
 printf "Creando carpetas web\n"
 
@@ -35,16 +37,16 @@ chmod 755 "/srv/www/$username/www"
 
 # Crear archivo index.html por defecto
 
-    echo "<!DOCTYPE html>" > "/srv/www/$username/www/index.html"
-    echo "<html>" >> "/srv/www/$username/www/index.html"
-	echo -e "\t<head>" >> "/srv/www/$username/www/index.html"
-	echo -e "\t\t<meta charset=\"utf-8\">" >> "/srv/www/$username/www/index.html"
-	echo -e "\t\t<title>Server page</title>" >> "/srv/www/$username/www/index.html"
-	echo -e "\t</head>" >> "/srv/www/$username/www/index.html"
-	echo -e "\t<body>" >> "/srv/www/$username/www/index.html"
-    echo -e "\t\t<div id=\"greetings\" style=\"width: 70%; margin: 0 auto; margin-top: 30vh; text-align: center;\">" >> "/srv/www/$username/www/index.html"
-	echo -e "\t\t\t<h1>Welcome $username!</h1>" >> "/srv/www/$username/www/index.html"
-    echo -e "\t\t\t<h2>This is your own server page.</h2>" >> "/srv/www/$username/www/index.html"
-    echo -e "\t\t</div>" >> "/srv/www/$username/www/index.html"
-	echo -e "\t</body>" >> "/srv/www/$username/www/index.html"
+echo "<!DOCTYPE html>" > "/srv/www/$username/www/index.html"
+echo "<html>" >> "/srv/www/$username/www/index.html"
+echo -e "\t<head>" >> "/srv/www/$username/www/index.html"
+echo -e "\t\t<meta charset=\"utf-8\">" >> "/srv/www/$username/www/index.html"
+echo -e "\t\t<title>Server page</title>" >> "/srv/www/$username/www/index.html"
+echo -e "\t</head>" >> "/srv/www/$username/www/index.html"
+echo -e "\t<body>" >> "/srv/www/$username/www/index.html"
+echo -e "\t\t<div id=\"greetings\" style=\"width: 70%; margin: 0 auto; margin-top: 30vh; text-align: center;\">" >> "/srv/www/$username/www/index.html"
+echo -e "\t\t\t<h1>Welcome $username!</h1>" >> "/srv/www/$username/www/index.html"
+echo -e "\t\t\t<h2>This is your own server page.</h2>" >> "/srv/www/$username/www/index.html"
+echo -e "\t\t</div>" >> "/srv/www/$username/www/index.html"
+echo -e "\t</body>" >> "/srv/www/$username/www/index.html"
 echo "</html>" >> "/srv/www/$username/www/index.html"
