@@ -3,6 +3,8 @@
 username="$1"
 site_user="/etc/apache2/sites-enabled/$username.lan.conf"
 
+# Crear site
+
 printf "Creando site: $site_user\n"
 
     echo "<VirtualHost *:80>" > "$site_user"
@@ -23,8 +25,26 @@ printf "Creando site: $site_user\n"
     echo -e "\tAllow from all" >> "$site_user"
 echo "</Directory>" >> "$site_user"
 
+# Crear carpetas servidor web
+
 printf "Creando carpetas web\n"
 
 mkdir -p "/srv/www/$username/www"
 mkdir -p "/srv/www/$username.lan/logs/"
 chmod 755 "/srv/www/$username/www"
+
+# Crear archivo index.html por defecto
+
+    echo "<!DOCTYPE html>" > "/srv/www/$username/www/index.html"
+    echo "<html>" >> "/srv/www/$username/www/index.html"
+	echo -e "\t<head>" >> "/srv/www/$username/www/index.html"
+	echo -e "\t\t<meta charset=\"utf-8\">" >> "/srv/www/$username/www/index.html"
+	echo -e "\t\t<title>Server page</title>" >> "/srv/www/$username/www/index.html"
+	echo -e "\t</head>" >> "/srv/www/$username/www/index.html"
+	echo -e "\t<body>" >> "/srv/www/$username/www/index.html"
+    echo -e "\t\t<div id=\"greetings\" style=\"width: 70%; margin: 0 auto; margin-top: 30vh; text-align: center;\">" >> "/srv/www/$username/www/index.html"
+	echo -e "\t\t\t<h1>Welcome $username!</h1>" >> "/srv/www/$username/www/index.html"
+    echo -e "\t\t\t<h2>This is your own server page.</h2>" >> "/srv/www/$username/www/index.html"
+    echo -e "\t\t</div>" >> "/srv/www/$username/www/index.html"
+	echo -e "\t</body>" >> "/srv/www/$username/www/index.html"
+echo "</html>" >> "/srv/www/$username/www/index.html"
