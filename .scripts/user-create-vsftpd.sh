@@ -3,12 +3,18 @@
 # Este script permite crear un servidor FTP para subir archivos a la carpeta web
 # apache del usuario
 # La carpeta del site es: /srv/www/$username/www
+# 
+# IMPORTANTE: para que cuando el usuario conecta por FTP vaya a parar a su carpeta web
+# he tenido que cambiar la home del usuario a /srv/www/usuario/www.
+# >>>> usermod --home /srv/www/sansa/www sansa
 
 username="$1"
+usr_conf_dir="/etc/vsftpd/users"
+usr_conf_file="/etc/vsftpd/users/$username"
+vsftpd_conf="/etc/vsftpd/vsftpd.conf"
 
 # Creamos un site para el usuario
 
-vsftpd_conf="/etc/vsftpd/vsftpd.conf"
 printf "Creando archivo de configuración: $vsftpd_conf\n"
 
 #CONEXIONES
@@ -30,9 +36,8 @@ echo -e "anon_mkdir_write_enable=NO" >> "$vsftpd_conf"
 
 #>> USUARIOS LOCALES (Permite usuarios locales, pueden escribir, se enjaulan en sus homes)
 echo -e "local_enable=YES" >> "$vsftpd_conf"
-echo -e "local_root=/srv/www/$USER/www/" >> "$vsftpd_conf"
 echo -e "write_enable=YES" >> "$vsftpd_conf"
-echo -e "#local_umask=022" >> "$vsftpd_conf"
+echo -e "user_config_dir=$usr_conf_dir" >> "$vsftpd_conf"
 
 
 #>> OPCIONES DE ENJAULADO
@@ -50,4 +55,10 @@ echo -e "#TIMEOUTS" >> "$vsftpd_conf"
 echo -e "#idle_session_timeout=600" >> "$vsftpd_conf"
 echo -e "#data_connection_timeout=120" >> "$vsftpd_conf"
 
+printf "Creando archivo de configuración de usuario en $usr_conf_file\n"
 
+mkdir -p $usr_conf_dir
+echo -e "local_root=/srv/www/$username/www" > "$usr_conf_file"
+echo -e "dirlist_enable=YES" >> "$usr_conf_file"
+echo -e "download_enable=YES" >> "$usr_conf_file"
+echo -e "write_enable=YES" >> "$usr_conf_file"
