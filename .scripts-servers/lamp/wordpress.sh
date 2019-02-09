@@ -1,38 +1,44 @@
 #!/bin/bash
 
-carpetawww=/var/www/html
+silent="-qq"
+silent_wget="-q"
+subdominio="wordpress"
+carpetawww=/var/www/html/$subdominio
 # Instalacion de apache
 
 read -p "instalación de apache" parada
 
-sudo apt purge apache2 -y
-sudo apt install apache2 -y
+#sudo apt purge apache2 -y
+sudo apt $silent install apache2 -y
 sudo systemctl enable apache2
 sudo systemctl start apache2
 
 read -p "instalación de mysql" parada
 # Instalacion de mysql
 
-sudo apt purge mysql-client mysql-server -y
-sudo apt install mysql-client mysql-server -y
+#sudo apt purge mysql-client mysql-server -y
+sudo apt $silent install mysql-client mysql-server -y 
 
 read -p "instalación de php" parada
 # Instalación de php 
-sudo apt-get install php7.2 php7.2-mysql libapache2-mod-php7.2 php7.2-cli php7.2-cgi php7.2-gd  -y
+sudo apt $silent install php7.2 php7.2-mysql libapache2-mod-php7.2 php7.2-cli php7.2-cgi php7.2-gd -yqq $silent
 
-read "descarga de wordpress" parada
+read -p "descarga de wordpress" parada
 # Descarga archivos de wordpress
 
-wget -c http://wordpress.org/latest.tar.gz
-tar -xzvf latest.tar.gz
+wget $silent_wget -c http://wordpress.org/latest.tar.gz
+tar -xzf latest.tar.gz
 
 if [[ ! -d $carpetawww ]]; then
     mkdir $carpetawww
+else
+    rm -rf $carpetawww/*
 fi
 
 chown -R www-data:www-data $carpetawww
 chmod 755 $carpetawww
-sudo rsync -av wordpress/* $carpetawww
+#sudo rsync -av wordpress/* $carpetawww
+cp -R wordpress/* $carpetawww
 sudo mv $carpetawww/wp-config-sample.php $carpetawww/wp-config.php
 
 
@@ -48,7 +54,7 @@ dbuser="root"
 password=""
 hostname="localhost"
 
-mysql -u$dbuser -p$password -h$hostname -v -e "wp.sql"
+mysql -u$dbuser -p$password -h$hostname -e "SOURCE wp.sql"
 
 #mysql -u$dbuser -p$password -h$hostname -v -e "CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd1'\G"
 #mysql -u$dbuser -p$password -h$hostname -v -e "GRANT ALL ON wp_myblog.* TO 'wpuser'@'localhost'\G"
@@ -57,7 +63,6 @@ mysql -u$dbuser -p$password -h$hostname -v -e "wp.sql"
 sed -i -e "s/database_name_here/wp_myblog/g" $carpetawww/wp-config.php
 sed -i -e "s/username_here/wpuser/g" $carpetawww/wp-config.php
 sed -i -e "s/password_here/Passw0rd1/g" $carpetawww/wp-config.php
-
 
 # Reiniciar servicios
 read -p "reinicio de servicios" parada
