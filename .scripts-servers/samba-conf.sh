@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# SEE: https://www.howtoforge.com/tutorial/debian-samba-server/
+# Localizaciones
 
-# Installation of Samba.
+carpeta_samba="/srv/samba"
+smb_conf="/etc/samba/smb.conf"
+
+# Instalación de samba
+
 apt-get install libcups2 samba samba-common cups -y
 
 # Create a backup of the configuration file.
@@ -10,43 +14,43 @@ if [ ! -f /etc/samba/smb.conf.bak ]; then
     cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
 fi
 
-mkdir -p /srv/share/users/
-chown -R root:users /srv/share/users/
-chmod -R 775 /srv/share/users/
+mkdir -p $carpeta_samba/users/
+chown -R root:users $carpeta_samba/users/
+chmod -R 775 $carpeta_samba/users/
 
-# Create the configuration file.
-#
-# If you don't know the name of the workgroup
-# run this command on the Windows client to get
-# the workgroup name: net config workstation.
-echo "[global]" > /etc/samba/smb.conf
-echo "workgroup = WORKGROUP" >> /etc/samba/smb.conf
-echo "server string = Samba Server %v" >> /etc/samba/smb.conf
-echo "netbios name = debian" >> /etc/samba/smb.conf
-echo "security = user" >> /etc/samba/smb.conf
-echo "map to guest = bad user" >> /etc/samba/smb.conf
-echo "dns proxy = no" >> /etc/samba/smb.conf
+# Configuración global para todos los recursos compartidos
+# Para saber el grupo de trabajo (en CMD): net config workstation
 
-# Share that is accessible and writable for all members of "users" group.
-echo " " >> /etc/samba/smb.conf
-echo "[users]" >> /etc/samba/smb.conf
-echo "comment = All Users" >> /etc/samba/smb.conf
-echo "path = /srv/share/users" >> /etc/samba/smb.conf
-echo "valid users = @users" >> /etc/samba/smb.conf
-echo "force group = users" >> /etc/samba/smb.conf
-echo "create mask = 0660" >> /etc/samba/smb.conf
-echo "directory mask = 0771" >> /etc/samba/smb.conf
-echo "writable = yes" >> /etc/samba/smb.conf
-echo " " >> /etc/samba/smb.conf
+echo "[global]" > smb_conf
+echo "workgroup = WORKGROUP" >> smb_conf
+echo "server string = Samba Server %v" >> smb_conf
+echo "netbios name = debian" >> smb_conf
+echo "security = user" >> smb_conf
+echo "map to guest = bad user" >> smb_conf
+echo "dns proxy = no" >> smb_conf
 
-# Share that make able users to read and write to their home directories.
-echo "[homes]" >> /etc/samba/smb.conf
-echo "comment = Home Directories" >> /etc/samba/smb.conf
-echo "browseable = no" >> /etc/samba/smb.conf
-echo "valid users = %S" >> /etc/samba/smb.conf
-echo "writable = yes" >> /etc/samba/smb.conf
-echo "create mask = 0700" >> /etc/samba/smb.conf
-echo "directory mask = 0700" >> /etc/samba/smb.conf
+# Accesible y permiso de escritura para miembros del grupo "users"
 
-# Restart Samba.
+echo " " >> smb_conf
+echo "[users]" >> smb_conf
+echo "comment = All Users" >> smb_conf
+echo "path = $carpeta_samba/users" >> smb_conf
+echo "valid users = @users" >> smb_conf
+echo "force group = users" >> smb_conf
+echo "create mask = 0660" >> smb_conf
+echo "directory mask = 0771" >> smb_conf
+echo "writable = yes" >> smb_conf
+echo " " >> smb_conf
+
+# Permetir que los usuarios puedan leer y escribir en sus homes
+
+echo "[homes]" >> smb_conf
+echo "comment = Home Directories" >> smb_conf
+echo "browseable = no" >> smb_conf
+echo "valid users = %S" >> smb_conf
+echo "writable = yes" >> smb_conf
+echo "create mask = 0700" >> smb_conf
+echo "directory mask = 0700" >> smb_conf
+
+# Reiniciar samba
 systemctl restart smbd.service
