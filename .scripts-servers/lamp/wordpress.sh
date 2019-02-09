@@ -48,10 +48,11 @@ dbuser="root"
 password=""
 hostname="localhost"
 
-mysql -u$dbuser -p$password -h$hostname -v -e "CREATE DATABASE wp_myblog\G"
-mysql -u$dbuser -p$password -h$hostname -v -e "CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd1'\G"
-mysql -u$dbuser -p$password -h$hostname -v -e "GRANT ALL ON wp_myblog.* TO 'wpuser'@'localhost'\G"
-mysql -u$dbuser -p$password -h$hostname -v -e "FLUSH PRIVILEGES\G"
+mysql -u$dbuser -p$password -h$hostname -v -e "wp.sql"
+
+#mysql -u$dbuser -p$password -h$hostname -v -e "CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd1'\G"
+#mysql -u$dbuser -p$password -h$hostname -v -e "GRANT ALL ON wp_myblog.* TO 'wpuser'@'localhost'\G"
+#mysql -u$dbuser -p$password -h$hostname -v -e "FLUSH PRIVILEGES\G"
 
 sed -i -e "s/database_name_here/wp_myblog/g" $carpetawww/wp-config.php
 sed -i -e "s/username_here/wpuser/g" $carpetawww/wp-config.php
