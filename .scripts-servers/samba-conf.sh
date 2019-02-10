@@ -31,18 +31,29 @@ echo "dns proxy = no" >> smb_conf
 
 # Accesible y permiso de escritura para miembros del grupo "users"
 
-echo " " >> smb_conf
-echo "[users]" >> smb_conf
-echo "comment = All Users" >> smb_conf
-echo "path = $carpeta_samba/users" >> smb_conf
-echo "valid users = @users" >> smb_conf
-echo "force group = users" >> smb_conf
-echo "create mask = 0660" >> smb_conf
-echo "directory mask = 0771" >> smb_conf
-echo "writable = yes" >> smb_conf
-echo " " >> smb_conf
+#echo " " >> smb_conf
+#echo "[users]" >> smb_conf
+#echo "comment = All Users" >> smb_conf
+#echo "path = $carpeta_samba/users" >> smb_conf
+#echo "valid users = @users" >> smb_conf
+#echo "force group = users" >> smb_conf
+#echo "create mask = 0660" >> smb_conf
+#echo "directory mask = 0771" >> smb_conf
+#echo "writable = yes" >> smb_conf
+#echo " " >> smb_conf
 
-# Permetir que los usuarios puedan leer y escribir en sus homes
+# Carpeta accesible a todos los usuarios: \\server\public
+
+echo "[public]" >> smb_conf
+echo "comment= Carpeta publica acceso anónimo" >> smb_conf
+echo "path=/srv/samba/" >> smb_conf
+echo "browsable=yes" >> smb_conf
+echo "create mask=0660" >> smb_conf
+echo "directory mask=0771" >> smb_conf
+echo "writable=yes" >> smb_conf
+echo "guest ok=yes" >> smb_conf
+
+# Permitir que los usuarios puedan leer y escribir en sus homes
 
 echo "[homes]" >> smb_conf
 echo "comment = Home Directories" >> smb_conf
