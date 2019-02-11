@@ -1,12 +1,20 @@
 #!/bin/bash
 
 #Es necesario permitir acceso al bloque directory / en el archivo apache2.conf para qué funcione
+if [ -z $1 ]
+then
+	echo "Uso del comando:"
+	echo "---------------"
+	echo "user-create-apache.sh <nombreusuario>"
+	echo "Ejemplo:"
+    echo "sh manolo o ./manolo"
+else
 
 username="$1"
+site_user="/etc/apache2/sites-enabled/$username.lan.conf"
 
 # Creamos un site para el usuario
 
-site_user="/etc/apache2/sites-enabled/$username.lan.conf"
 printf "Creando site: $site_user\n"
 
     echo "<VirtualHost *:80>" > "$site_user"
@@ -50,3 +58,4 @@ echo -e "\t\t\t<h2>This is your own server page.</h2>" >> "/srv/www/$username/ww
 echo -e "\t\t</div>" >> "/srv/www/$username/www/index.html"
 echo -e "\t</body>" >> "/srv/www/$username/www/index.html"
 echo "</html>" >> "/srv/www/$username/www/index.html"
+fi
