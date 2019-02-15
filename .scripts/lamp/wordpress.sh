@@ -55,25 +55,43 @@ else
     sudo chown -R www-data:www-data $carpetawww
     sudo chmod -R 755 $carpetawww
 
+    bd_wp_name=$subdominio
+
     read -p "creación de base de datos" parada
+
     # Crear BD
 
     dbuser="root"
     password=""
     hostname="localhost"
 
-    mysql -u$dbuser -p$password -h$hostname -e "SOURCE wp.sql"
+	# Por un casual ejecutar los comandos uno a uno no funciona, pero ejecutar un archivo .sql sí
 
-    #mysql -u$dbuser -p$password -h$hostname -v -e "CREATE USER 'wpuser'@'localhost' IDENTIFIED BY 'Passw0rd1'\G"
-    #mysql -u$dbuser -p$password -h$hostname -v -e "GRANT ALL ON wp_myblog.* TO 'wpuser'@'localhost'\G"
+	echo "CREATE DATABASE $subdominio;" > wp_$subdominio.sql
+    	echo "CREATE USER 'wpuser_$subdominio'@'localhost' IDENTIFIED BY 'Passw0rd1';" >> wp_$subdominio.sql
+	echo "GRANT ALL ON $bd_wp_name.* TO 'wpuser_$subdominio'@'localhost';" >> wp_$subdominio.sql
+	echo "FLUSH PRIVILEGES;" >> wp_$subdominio.sql
+
+
+    #mysql -u$dbuser -p$password -h$hostname -v -e "CREATE USER 'wpuser_$subdominio'@'localhost' IDENTIFIED BY 'Passw0rd1'\G"
+    #mysql -u$dbuser -p$password -h$hostname -v -e "GRANT ALL ON $bd_wp_name.* TO 'wpuser_$subdominio'@'localhost'\G"
     #mysql -u$dbuser -p$password -h$hostname -v -e "FLUSH PRIVILEGES\G"
 
-    sed -i -e "s/database_name_here/wp_myblog/g" $carpetawww/wp-config.php
-    sed -i -e "s/username_here/wpuser/g" $carpetawww/wp-config.php
+
+    mysql -u$dbuser -p$password -h$hostname -e "SOURCE wp_$subdominio.sql"
+
+    sed -i -e "s/database_name_here/$bd_wp_name/g" $carpetawww/wp-config.php
+    sed -i -e "s/username_here/wpuser_$subdominio/g" $carpetawww/wp-config.php
     sed -i -e "s/password_here/Passw0rd1/g" $carpetawww/wp-config.php
 
     # Reiniciar servicios
     read -p "reinicio de servicios" parada
     sudo systemctl restart apache2.service
     sudo systemctl restart mysql.service
+
+	echo " RESUMEN DE LA INSTALACION"
+	echo "-- Site: http://dominio/$subdominio"
+	echo "-- Base de datos: $bd_wp_name" parada
+	echo "-- Localización del site: $carpetawww"
+
 fi
