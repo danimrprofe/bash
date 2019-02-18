@@ -1,7 +1,11 @@
 #!/bin/bash
 if [ -z $1 ]
 then
-	echo "Uso del comando:"
+	echo "Este script instala Wordpress, para ello:"
+	echo " 1) Instala Apache, PHP y Mysql"
+	echo " 2) Descarga la última versión de Wordpress"
+	echo " 3) Configura Wordpress para conectar a la BD"
+	echo "Uso del comando (probado en Ubuntu 18.04):"
 	echo "---------------"
 	echo "sudo wordpress.sh <nombredelsite>"
 	echo "Ejemplos:"
@@ -12,7 +16,8 @@ else
     silent_wget="-q"
     subdominio="wp_$1"
     carpetawww=/var/www/html/$subdominio
-    # Instalacion de apache
+    
+    # INSTALACIÓN DE APACHE
 
     read -p "instalación de apache" parada
 
@@ -21,17 +26,15 @@ else
     sudo systemctl enable apache2
     sudo systemctl start apache2
 
-    read -p "instalación de mysql" parada
-    # Instalacion de mysql
+	# INSTALACION DE MYSQL
+	
+	read -p "instalación de mysql" parada
+    	sudo apt $silent install mysql-client mysql-server -y 
 
-    #sudo apt purge mysql-client mysql-server -y
-    sudo apt $silent install mysql-client mysql-server -y 
-
-    read -p "instalación de php" parada
-    # Instalación de php 
-    sudo apt $silent install php7.2 php7.2-mysql libapache2-mod-php7.2 php7.2-cli php7.2-cgi php7.2-gd -yqq $silent
-
-    
+	# INSTALACION DE PHP
+	
+	read -p "instalación de php" parada 
+	sudo apt $silent install php7.2 php7.2-mysql libapache2-mod-php7.2 php7.2-cli php7.2-cgi php7.2-gd -yqq $silent
 	
 	# DESCARGA DE WORDPRESS
 
