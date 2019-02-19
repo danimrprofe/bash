@@ -9,9 +9,10 @@ smb_conf="/etc/samba/smb.conf"
 
 apt-get install libcups2 samba samba-common cups -y
 
-# Create a backup of the configuration file.
-if [ ! -f /etc/samba/smb.conf.bak ]; then
-    cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
+# si ya existía un archivo de configuración, guardamos una copia
+
+if [ ! -f $smb_conf.bak ]; then
+    cp $smb_conf $smb_conf.bak
 fi
 
 mkdir -p $carpeta_samba/users/
